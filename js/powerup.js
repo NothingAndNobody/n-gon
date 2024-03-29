@@ -326,13 +326,13 @@ const powerUps = {
                 return
             }
             if (tech.isCancelDuplication) {
-                tech.duplication += 0.047
+                tech.duplication += 0.05
                 tech.maxDuplicationEvent()
                 simulation.makeTextLog(`tech.duplicationChance() <span class='color-symbol'>+=</span> ${0.043}`)
                 simulation.circleFlare(0.043);
             }
             if (tech.isCancelRerolls) {
-                for (let i = 0, len = 6 + 6 * Math.random(); i < len; i++) {
+                for (let i = 0, len = 10 + 4 * Math.random(); i < len; i++) {
                     let spawnType
                     if (Math.random() < 0.4 && !tech.isEnergyNoAmmo) {
                         spawnType = "ammo"
@@ -344,7 +344,7 @@ const powerUps = {
                     powerUps.spawn(m.pos.x + 40 * (Math.random() - 0.5), m.pos.y + 40 * (Math.random() - 0.5), spawnType, false);
                 }
             }
-            if (tech.isCancelCouple) powerUps.spawnDelay("coupling", 6)
+            if (tech.isCancelCouple) powerUps.spawnDelay("coupling", 8)
             // if (tech.isCancelTech && Math.random() < 0.3) {
             //     powerUps.spawn(m.pos.x + 40 * (Math.random() - 0.5), m.pos.y + 40 * (Math.random() - 0.5), "tech", false);
             //     simulation.makeTextLog(`<strong>options exchange</strong>: returns 1 <strong class='color-m'>tech</strong>`)
@@ -505,9 +505,13 @@ const powerUps = {
         currentRerollCount: 0,
         use(type) { //runs when you actually research a list of selections, type can be field, gun, or tech
             if (tech.isJunkResearch && powerUps.research.currentRerollCount < 3) {
-                tech.addJunkTechToPool(tech.junkResearchNumber * 0.01)
+                tech.addJunkTechToPool(0.01)
             } else {
                 powerUps.research.changeRerolls(-1)
+            }
+            if (tech.isResearchDamage) {
+                tech.damage *= 1.04
+                simulation.makeTextLog(`<strong>1.04x</strong> <strong class='color-d'>damage</strong> from <strong>peer review</strong>`);
             }
             powerUps.research.currentRerollCount++
             // if (tech.isBanish && type === 'tech') { // banish researched tech
@@ -699,11 +703,8 @@ const powerUps = {
             text += `<div class='choose-grid-module entanglement flipX' onclick='powerUps.endDraft("${type}",true)'>entanglement</div>`
         } else if (tech.isJunkResearch && powerUps.research.currentRerollCount < 3) {
             text += `<div onclick="powerUps.research.use('${type}')" class='research-card'>` // style = "margin-left: 192px; margin-right: -192px;"
-            tech.junkResearchNumber = Math.ceil(3 * Math.random())
             text += `<div><div> <span style="position:relative;">`
-            for (let i = 0; i < tech.junkResearchNumber; i++) {
-                text += `<div class="circle-grid junk" style="position:absolute; top:0; left:${15 * i}px ;opacity:0.8; border: 1px #fff solid;width: 1.15em;height: 1.15em;"></div>`
-            }
+            text += `<div class="circle-grid junk" style="position:absolute; top:0; left:${15 * i}px ;opacity:0.8; border: 1px #fff solid;width: 1.15em;height: 1.15em;"></div>`
             text += `</span>&nbsp; <span class='research-select'>pseudoscience</span></div></div></div>`
         } else if (powerUps.research.count > 0) {
             text += `<div onclick="powerUps.research.use('${type}')" class='research-card' >` // style = "margin-left: 192px; margin-right: -192px;"
@@ -721,11 +722,8 @@ const powerUps = {
             text += `<span class='research-card entanglement flipX' style="width: 275px;" onclick='powerUps.endDraft("${type}",true)'><span style="letter-spacing: 6px;">entanglement</span></span>`  //&zwnj;
         } else if (tech.isJunkResearch && powerUps.research.currentRerollCount < 3) {
             text += `<span onclick="powerUps.research.use('${type}')" class='research-card' style="width: 275px;float: left;">` // style = "margin-left: 192px; margin-right: -192px;"
-            tech.junkResearchNumber = Math.ceil(3 * Math.random())
             text += `<div><div><span style="position:relative;">`
-            for (let i = 0, len = tech.junkResearchNumber; i < len; i++) {
-                text += `<div class="circle-grid junk" style="position:absolute; top:0; left:${15 * i}px ;opacity:0.8; border: 1px #fff solid;width: 1.15em;height: 1.15em;"></div>`
-            }
+            text += `<div class="circle-grid junk" style="position:absolute; top:0; left:${15 * i}px ;opacity:0.8; border: 1px #fff solid;width: 1.15em;height: 1.15em;"></div>`
             text += `</span>&nbsp; <span class='research-select'>${tech.isResearchReality ? "<span class='alt'>alternate reality</span>" : "research"}</span></div></div></span>`
         } else if (powerUps.research.count > 0) {
             text += `<span onclick="powerUps.research.use('${type}')" class='research-card' style="width: 275px;float: left;">` // style = "margin-left: 192px; margin-right: -192px;"
@@ -787,24 +785,6 @@ const powerUps = {
         }
         return text
     },
-    // researchAndCancelText(type) {
-    //     let text = "<div class= 'choose-grid-module'>"
-    //     if (tech.isJunkResearch && powerUps.research.currentRerollCount < 3) {
-    //         text += `<div onclick="powerUps.research.use('${type}')" class='choose-grid-module research-card'>` // style = "margin-left: 192px; margin-right: -192px;"
-    //         tech.junkResearchNumber = Math.ceil(4 * Math.random())
-    //         text += `<div><div> <span style="position:relative;">`
-    //         for (let i = 0; i < tech.junkResearchNumber; i++) text += `<div class="circle-grid junk" style="position:absolute; top:0; left:${15*i}px ;opacity:0.8; border: 1px #fff solid;"></div>`
-    //         text += `</span>&nbsp; <span class='research-select'>pseudoscience</span></div></div></div>`
-    //     } else if (powerUps.research.count > 0) {
-    //         text += `<div onclick="powerUps.research.use('${type}')" class='choose-grid-module research-card' >` // style = "margin-left: 192px; margin-right: -192px;"
-    //         text += `<div><div><span style="position:relative;">`
-    //         for (let i = 0, len = Math.min(powerUps.research.count, 30); i < len; i++) text += `<div class="circle-grid research" style="position:absolute; top:0; left:${(18 - len*0.21)*i}px ;opacity:0.8; border: 1px #fff solid;"></div>`
-    //         text += `</span>&nbsp; <span class='research-select'>${tech.isResearchReality?"<span class='alt'>alternate reality</span>": "research"}</span></div></div></div>`
-    //     } else {
-    //         text += `<div></div>`
-    //     }
-    //     return text + '</div>'
-    // },
     hideStyle: `style="height:auto; border: none; background-color: transparent;"`,
     gunText(choose, click) {
         const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/gun/${b.guns[choose].name}.webp');"`
@@ -958,9 +938,6 @@ const powerUps = {
                             if (tech.tech[i].isBotTech && tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed()) botTech.push(i)
                         }
                         if (botTech.length > 0) { //pick random bot tech
-                            // const choose = botTech[Math.floor(Math.random() * botTech.length)];
-                            // const isCount = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count+1}x)` : "";
-                            // text += `<div class="choose-grid-module" onclick="powerUps.choose('tech',${choose})"><div class="grid-title"> <span  style = "font-size: 150%;font-family: 'Courier New', monospace;">⭓▸●■</span>  &nbsp; ${tech.tech[choose].name} ${isCount}</div>${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div>`
                             const choose = botTech[Math.floor(Math.random() * botTech.length)];
                             const techCountText = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count + 1}x)` : "";
                             const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/${tech.tech[choose].name}.webp');"`
@@ -1024,9 +1001,6 @@ const powerUps = {
                             if (tech.tech[i].isBotTech && tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed()) botTech.push(i)
                         }
                         if (botTech.length > 0) { //pick random bot tech
-                            // const choose = botTech[Math.floor(Math.random() * botTech.length)];
-                            // const isCount = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count+1}x)` : "";
-                            // text += `<div class="choose-grid-module" onclick="powerUps.choose('tech',${choose})"><div class="grid-title"> <span  style = "font-size: 150%;font-family: 'Courier New', monospace;">⭓▸●■</span>  &nbsp; ${tech.tech[choose].name} ${isCount}</div>${tech.tech[choose].descriptionFunction ? tech.tech[choose].descriptionFunction() : tech.tech[choose].description}</div>`
                             const choose = botTech[Math.floor(Math.random() * botTech.length)];
                             const techCountText = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count + 1}x)` : "";
                             const style = localSettings.isHideImages ? powerUps.hideStyle : `style="background-image: url('img/${tech.tech[choose].name}.webp');"`
@@ -1051,14 +1025,10 @@ const powerUps = {
         effect() {
             if (m.alive) {
                 // powerUps.animatePowerUpGrab('hsla(246, 100%, 77%,0.5)')
-                let junkCount = 0 //used for junk estimation
-                let totalCount = 0 //used for junk estimation
                 let options = []; //generate all options
                 optionLengthNoDuplicates = 0
                 for (let i = 0; i < tech.tech.length; i++) {
                     if (tech.tech[i].count < tech.tech[i].maxCount && tech.tech[i].allowed() && !tech.tech[i].isBanished) {
-                        totalCount += tech.tech[i].frequency
-                        if (tech.tech[i].isJunk) junkCount += tech.tech[i].frequency
                         if (tech.tech[i].frequency > 0) optionLengthNoDuplicates++
                         for (let j = 0, len = tech.tech[i].frequency; j < len; j++) options.push(i);
                     }
@@ -1110,20 +1080,28 @@ const powerUps = {
                             if (i === 0) simulation.makeTextLog(`options.length = ${optionLengthNoDuplicates} <span class='color-text'>//tech removed from pool by decoherence</span>`)
                         }
                         removeOption(choose) //move from future options pool to avoid repeats on this selection
-                        tech.tech[choose].isRecentlyShown = true //this flag prevents this option from being shown the next time you pick up a tech power up                         
-                        const isCount = tech.tech[choose].count > 0 ? `(${tech.tech[choose].count + 1}x)` : "";
-                        if (tech.tech[choose].isFieldTech) {
-                            text += powerUps.fieldTechText(choose, `powerUps.choose('tech',${choose})`)
-                        } else if (tech.tech[choose].isGunTech) {
-                            text += powerUps.gunTechText(choose, `powerUps.choose('tech',${choose})`)
-                        } else if (tech.tech[choose].isJunk) {
-                            text += powerUps.junkTechText(choose, `powerUps.choose('tech',${choose})`)
-                        } else if (tech.tech[choose].isSkin) {
-                            text += powerUps.skinTechText(choose, `powerUps.choose('tech',${choose})`)
-                        } else { //normal tech
-                            text += powerUps.techText(choose, `powerUps.choose('tech',${choose})`)
+                        tech.tech[choose].isRecentlyShown = true //this flag prevents this option from being shown the next time you pick up a tech power up
+                        if (Math.random() < tech.junkChance) { // choose is set to a random JUNK tech
+                            const list = []
+                            for (let i = 0; i < tech.tech.length; i++) {
+                                if (tech.tech[i].isJunk) list.push(i)
+                            }
+                            chooseJUNK = list[Math.floor(Math.random() * list.length)]
+                            text += powerUps.junkTechText(chooseJUNK, `powerUps.choose('tech',${chooseJUNK})`)
+                        } else {
+                            if (tech.tech[choose].isFieldTech) {
+                                text += powerUps.fieldTechText(choose, `powerUps.choose('tech',${choose})`)
+                            } else if (tech.tech[choose].isGunTech) {
+                                text += powerUps.gunTechText(choose, `powerUps.choose('tech',${choose})`)
+                            } else if (tech.tech[choose].isJunk) {
+                                text += powerUps.junkTechText(choose, `powerUps.choose('tech',${choose})`)
+                            } else if (tech.tech[choose].isSkin) {
+                                text += powerUps.skinTechText(choose, `powerUps.choose('tech',${choose})`)
+                            } else { //normal tech
+                                text += powerUps.techText(choose, `powerUps.choose('tech',${choose})`)
+                            }
+                            if (options.length < 1) break
                         }
-                        if (options.length < 1) break
                     }
                     if (tech.isExtraBotOption) {
                         const botTech = [] //make an array of bot options

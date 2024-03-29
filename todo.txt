@@ -1,15 +1,60 @@
 ******************************************************** NEXT PATCH **************************************************
 
-tech: hyperpolarization - reduce the CD on depolarization by 1 second
+text rework
+  most numbers converted from "+50%" to "1.5x"
+  renamed defense -> damage taken
+  adjusted about 20 tech to round down or up their values to less decimals
+    for a few I added research cost or JUNK chance to balance rounding
 
-metamaterial absorber 22->25% chance to get power up for mobs not killed
-symbiosis -0.5 -> 0.25 max health after killing a mob
-dazzler -15->10 energy after decloaking and stunning mobs
-Hilbert space 142->300% damage
-
-fixed bug with 1000x more frequent enthalpy
+new community map soft by Richard0820
+tech: peer review - gain +damage each time you research
+self-assembly scales with health not health percent
+matter.js engine reverted back to 0.18 (to fix an issue with time dilation)
 
 *********************************************************** TODO *****************************************************
+
+tech - destroys a random tech each new level and gains +damage each time
+
+List of ways to break the game
+  CPT + high energy regen
+  research->bot fabrication-> ersatz bots -> various bot upgrades
+  duplication 100%
+  electronegativity and high energy?
+
+boss - tracks the position, velocity, angle of power ups, blocks, and bullets it fires
+  reactor only?
+  will rewind time
+    after damage threshold?
+  does it track player bullets? 
+
+button/switch input ideas from Cocoon game
+  pick up blocks that have a rubber band attached to a sliding switch
+    as player moves the vector direction of the rubber band will move the slider left or right
+    use this to open doors, move larger blocks, ...
+  switches that toggle left, right when player presses input.field while standing nearby
+    replace laser off on switch?
+    platform that rises up when player presses input.field while standing
+  How to instruct player to use field on these?
+    color with field #0ff
+    draw field effect
+    make it still functional without the field button
+
+tech - getting a new gun also gives you 2 random tech for that gun
+  or a field?
+  can these guntech tech be converted into a player choice?
+
+tech: interest - research and ammo increases by 10% at the start of each level?
+  spawn research and ammo at start of new level
+    extend to current health?
+
+how to reduce the number of clicks and keypresses
+  auto fire mode
+    player shoots at whatever is nearby
+      should player have to look towards mobs?
+      increase ammo?
+
+animate egg laying mobs
+  just draw a circle when it happens?
 
 improve new player experience
   training is too long to be a tutorial
@@ -51,7 +96,7 @@ make grappling hook of different shapes
     longer
     circular with spikes
   indicate tech upgrades?
-    rupture, reel, tokamak
+    swarf, reel, tokamak
   do this in draw or in verticies?
     draw can have different colors 
 
@@ -111,6 +156,7 @@ super-bot:  fires super balls
 tech: after a needle hits a mobs
   the needle splits into 3 needles?
   reset your fire CD?
+  fire again for zero ammo
   2x damage for each consecutive mob hit?
 
 mob non-combat behaviors, like Rain World
@@ -239,9 +285,6 @@ Tech:when relay switch/flip flop is on, turn ammo powerups into boosts, when rel
   or toggle other power ups
     health/ammo
     
-JUNK: what the golf?
-  trying to throw a block throws you instead
-
 complete blowSuckBoss...  or don't
 
 tech: laser reflections increase damage
@@ -1052,7 +1095,6 @@ possible names for tech
   holographic - 2-D surface can predict the 3-D space behind it?  I think
   hypergolic - A hypergolic propellant combination used in a rocket engine is one whose components spontaneously ignite when they come into contact with each other.
   swarm intelligence - for a drone tech
-  genetic algorithm
   metaheuristic - is a higher-level procedure or heuristic designed to find, generate, or select a heuristic (partial search algorithm) that may provide a sufficiently good solution to an optimization problem, especially with incomplete or imperfect information or limited computation capacity
   stochastic optimization
   electrostatic discharge
@@ -1097,6 +1139,8 @@ possible names for tech
   Pyroelectricity - voltage from temp changes - upgrade from piezoelectricity 
   Unruh effect - accelerating makes heat/thermal particles
   configuration space - holds the position of everything
+  stress–energy tensor
+  radioisotope thermoelectric generator - 
 
 
 ******************************************************** CARS IMAGES ********************************************************
